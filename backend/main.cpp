@@ -45,6 +45,9 @@ int main() {
         cerr << "Storage error: " << e.what() << endl;
         return 1;
     }
+    CROW_ROUTE(app, "/")([]() {
+    return crow::response(200, "Inventory API is running");
+    });
 
     CROW_ROUTE(app, "/api/health")([]() {
         json::wvalue response;
