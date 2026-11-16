@@ -17,9 +17,11 @@ using namespace crow;
 int main() {
     crow::App<crow::CORSHandler> app;
     
-    auto& cors = app.get_middleware<crow::CORSHandler>();
-    
-    cors.global()
+crow::App<crow::CORSHandler> app;
+
+auto& cors = app.get_middleware<crow::CORSHandler>();
+
+cors.prefix("/api/")
     .origin("https://ahtishamasghar.github.io")
     .methods("GET"_method, "POST"_method, "PUT"_method,
              "DELETE"_method, "OPTIONS"_method)
