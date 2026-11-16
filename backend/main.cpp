@@ -15,16 +15,15 @@ using namespace std;
 using namespace crow;
 
 int main() {
-    crow::SimpleApp app;
+    crow::App<crow::CORSHandler> app;
     
-    // auto& cors = app.get_middleware<crow::CORSHandler>();
+    auto& cors = app.get_middleware<crow::CORSHandler>();
     
-    // cors.global()
-    //     .origin("https://ahtishamasghar.github.io")
-    //     .methods("GET"_method, "POST"_method, "PUT"_method,
-    //              "DELETE"_method, "OPTIONS"_method)
-    //     .headers("Content-Type");
-
+    cors.global()
+    .origin("https://ahtishamasghar.github.io")
+    .methods("GET"_method, "POST"_method, "PUT"_method,
+             "DELETE"_method, "OPTIONS"_method)
+    .headers("Content-Type");
     InventoryEngine inventory;
     FileStorage storage("storage/products.json");
     mutex inventoryMutex;
