@@ -28,16 +28,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy compiled executable
 COPY --from=builder /app/build/inventory_server ./inventory_server
-
-# Copy JSON storage directory
 COPY --from=builder /app/storage ./storage
 
-# Render default port
-ENV PORT=10000
+ENV PORT=8080
 
-EXPOSE 10000
+EXPOSE 8080
 
-# Start Crow server
 CMD ["./inventory_server"]
