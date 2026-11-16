@@ -4,6 +4,8 @@
 #include "inventory_engine.hpp"
 #include <iostream>
 #include <vector>
+#include <string>
+#include <cstdlib>
 #include <stdexcept>
 #include <mutex>
 #include <exception>
@@ -13,13 +15,16 @@ using namespace std;
 using namespace crow;
 
 int main() {
-
     crow::App<crow::CORSHandler> app;
+    
     auto& cors = app.get_middleware<crow::CORSHandler>();
+    
     cors.global()
-        .origin("http://127.0.0.1:5500")
-        .methods("GET"_method, "POST"_method, "PUT"_method, "DELETE"_method, "OPTIONS"_method)
+        .origin("https://ahtishamasghar.github.io")
+        .methods("GET"_method, "POST"_method, "PUT"_method,
+                 "DELETE"_method, "OPTIONS"_method)
         .headers("Content-Type");
+
     InventoryEngine inventory;
     FileStorage storage("storage/products.json");
     mutex inventoryMutex;
@@ -323,7 +328,10 @@ CROW_ROUTE(app, "/api/products").methods(HTTPMethod::POST)
         return result;
     });
 
-    app.bindaddr("127.0.0.1").port(8080).run();
-
+    
+    const char* portEnv = getenv("PORT");
+    int port = portEnv ? stoi(portEnv) : 8080;
+    
+    app.bindaddr("0.0.0.0").port(port).run();
     return 0;
 }
