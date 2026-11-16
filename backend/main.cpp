@@ -20,7 +20,7 @@ int main() {
     
     auto& cors = app.get_middleware<crow::CORSHandler>();
     
-    cors.prefix("/api/")
+    cors.prefix("/api/products")
     .origin("https://ahtishamasghar.github.io")
     .methods("GET"_method, "POST"_method, "PUT"_method,
              "DELETE"_method, "OPTIONS"_method)
@@ -49,12 +49,16 @@ int main() {
     return crow::response(200, "Inventory API is running");
     });
 
-    CROW_ROUTE(app, "/api/health")([]() {
-        json::wvalue response;
-        response["status"] = "ok";
-        response["service"] = "Inventory Optimization Engine";
-        return response;
-    });
+    CROW_ROUTE(app, "/api/health")
+([](const crow::request& req) {
+    CROW_LOG_INFO << "Health check method: "
+                  << crow::method_name(req.method);
+
+    crow::json::wvalue response;
+    response["status"] = "ok";
+    response["service"] = "Inventory Optimization Engine";
+    return response;
+});
 
     CROW_ROUTE(app, "/api/products")
     ([&inventory, &inventoryMutex]() {
