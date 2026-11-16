@@ -14,17 +14,29 @@
 using namespace std;
 using namespace crow;
 
+struct HealthLogger {
+    struct context {};
+
+    void before_handle(crow::request& req, crow::response&, context&) {
+        CROW_LOG_INFO << "Incoming request method: "
+                      << crow::method_name(req.method)
+                      << " path: " << req.url;
+    }
+
+    void after_handle(crow::request&, crow::response&, context&) {}
+};
+
 int main() {
-    
-    crow::App<crow::CORSHandler> app;
-    
+    crow::App<HealthLogger, crow::CORSHandler> app;
+
     auto& cors = app.get_middleware<crow::CORSHandler>();
-    
+
     cors.prefix("/api/products")
-    .origin("https://ahtishamasghar.github.io")
-    .methods("GET"_method, "POST"_method, "PUT"_method,
-             "DELETE"_method, "OPTIONS"_method)
-    .headers("Content-Type");
+        .origin("https://ahtishamasghar.github.io")
+        .methods("GET"_method, "POST"_method, "PUT"_method,
+                 "DELETE"_method, "OPTIONS"_method)
+        .headers("Content-Type");
+
     InventoryEngine inventory;
     FileStorage storage("storage/products.json");
     mutex inventoryMutex;
